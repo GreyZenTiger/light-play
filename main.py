@@ -1,16 +1,44 @@
-# This is a sample Python script.
+#!/usr/bin/env python
+# coding: utf8
 
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import time
+from typing import List
 
+import RPi.GPIO as GPIO
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+# defines numbers of GPIO pins
+GPIO.setmode(GPIO.BOARD)
 
+# instantiate led's
+led0: int = 16
+led1: int = 18
+led2: int = 22
+led3: int = 11
+led4: int = 13
+led5: int = 15
 
-# Press the green button in the gutter to run the script.
+led_list: List[int] = [led0, led1, led2, led3, led4, led5]
+
+# defines GPIO pins as outputs
+GPIO.setup(led0, GPIO.OUT)
+GPIO.setup(led1, GPIO.OUT)
+GPIO.setup(led2, GPIO.OUT)
+GPIO.setup(led3, GPIO.OUT)
+GPIO.setup(led4, GPIO.OUT)
+GPIO.setup(led5, GPIO.OUT)
+
+# amount of runs
+runs: int = 3
+# time interval in seconds
+wait: float = 0.3
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    while runs > 0:
+        for led in led_list:
+            GPIO.output(int(led), GPIO.HIGH)
+            time.sleep(wait)
+            GPIO.output(int(led), GPIO.LOW)
+            time.sleep(wait)
+        runs = runs - 1
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    GPIO.cleanup()
