@@ -35,6 +35,15 @@ GPIO.setup(led5, GPIO.OUT)
 
 
 def knight_rider_light(runs: int = 10, wait: float = 0.1):
+    """A light running from one side to the other and back.
+
+    It looks like the light of the "Knight Rider".
+
+    :parameter runs int, optional Describes how often the light should
+    run from one site to the other. (default is 10)
+    :parameter wait float, optional Describes how many seconds
+    a led would shine. (default is 0.1)
+    """
     while runs > 0:
         for led in led_list:
             GPIO.output(int(led), GPIO.HIGH)
@@ -46,6 +55,13 @@ def knight_rider_light(runs: int = 10, wait: float = 0.1):
 
 
 def flickering_light(duration: int = 50):
+    """The led's flicker randomly.
+
+    It looks like a little fire.
+
+    :parameter duration int, optional Describes how often
+    the led's would flash. (default is 50)
+    """
     while duration > 0:
         random_led = randint(0, 5)
         GPIO.output(int(led_list[random_led]), GPIO.HIGH)
@@ -54,7 +70,19 @@ def flickering_light(duration: int = 50):
         duration = duration - 1
 
 
-def clapping_light(runs: int = 20, wait: float = 0.1, invert: bool = False):
+def clapping_light(runs: int = 10, wait: float = 0.1, invert: bool = False):
+    """Two lights running from the outer led's to the inner ones.
+
+    If invert is True they would start at the inner led's running to the
+    outer ones.
+
+    :parameter runs int, optional Describes how often the lights should
+    run from one site to the other. (default is 10)
+    :parameter wait float, optional Describes how many seconds
+    a led would shine. (default is 0.1)
+    :parameter invert bool, optional Describes if the flashing lights
+    should start at the outer or the inner led's. (default is False)
+    """
     # splitting led_list in outer, middle and inner led's
     outer_led: List[int] = [led_list[0], led_list[5]]
     middle_led: List[int] = [led_list[1], led_list[4]]
@@ -80,6 +108,7 @@ def clapping_light(runs: int = 20, wait: float = 0.1, invert: bool = False):
                 GPIO.output(pair, GPIO.LOW)
                 time.sleep(wait)
         runs = runs - 1
+
 
 if __name__ == '__main__':
     if mode == 1:
