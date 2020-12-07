@@ -53,11 +53,39 @@ def flickering_light(duration: int = 50):
         duration = duration - 1
 
 
+def knight_rider_light(runs: int = 20,wait: float = 0.1):
+    first_list: List[int] = [led_list[0],led_list[5]]
+    middle_list: List[int] = [led_list[1],led_list[4]]
+    last_list: List[int] = [led_list[2], led_list[3]]
+
+    GPIO.output(first_list, GPIO.HIGH)
+    time.sleep(wait)
+    GPIO.output(first_list, GPIO.LOW)
+    time.sleep(wait)
+    while runs > 0:
+        GPIO.output(middle_list, GPIO.HIGH)
+        time.sleep(wait)
+        GPIO.output(middle_list, GPIO.LOW)
+        time.sleep(wait)
+        if runs % 2 == 0:
+            GPIO.output(last_list, GPIO.HIGH)
+            time.sleep(wait)
+            GPIO.output(last_list, GPIO.LOW)
+            time.sleep(wait)
+        else:
+            GPIO.output(first_list, GPIO.HIGH)
+            time.sleep(wait)
+            GPIO.output(first_list, GPIO.LOW)
+            time.sleep(wait)
+        runs = runs - 1
+
 if __name__ == '__main__':
     if mode == 1:
         running_light()
     elif mode == 2:
         flickering_light()
+    elif mode == 3:
+        knight_rider_light()
     else:
         sys.stdout.write("Please choose a mode between 1 and 2.")
     GPIO.cleanup()
