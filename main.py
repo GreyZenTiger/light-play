@@ -9,7 +9,7 @@ import RPi.GPIO as GPIO
 # defines numbers of GPIO pins
 GPIO.setmode(GPIO.BOARD)
 
-# instantiate led's
+# defines led's
 led0: int = 16
 led1: int = 18
 led2: int = 22
@@ -27,12 +27,8 @@ GPIO.setup(led3, GPIO.OUT)
 GPIO.setup(led4, GPIO.OUT)
 GPIO.setup(led5, GPIO.OUT)
 
-# amount of runs
-runs: int = 3
-# time interval in seconds
-wait: float = 0.3
 
-if __name__ == '__main__':
+def running_light(runs: int = 3, wait: float = 0.1):
     while runs > 0:
         for led in led_list:
             GPIO.output(int(led), GPIO.HIGH)
@@ -40,5 +36,8 @@ if __name__ == '__main__':
             GPIO.output(int(led), GPIO.LOW)
             time.sleep(wait)
         runs = runs - 1
-
     GPIO.cleanup()
+
+
+if __name__ == '__main__':
+    running_light()
