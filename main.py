@@ -53,30 +53,31 @@ def flickering_light(duration: int = 50):
         duration = duration - 1
 
 
-def knight_rider_light(runs: int = 20,wait: float = 0.1):
-    first_list: List[int] = [led_list[0],led_list[5]]
-    middle_list: List[int] = [led_list[1],led_list[4]]
-    last_list: List[int] = [led_list[2], led_list[3]]
+def clapping_light(runs: int = 20, wait: float = 0.1, invert: bool = False):
+    # splitting led_list in outer, middle and inner led's
+    outer_led: List[int] = [led_list[0], led_list[5]]
+    middle_led: List[int] = [led_list[1], led_list[4]]
+    inner_led: List[int] = [led_list[2], led_list[3]]
+    # holds the single led pairs starting with outer_led at index 0
+    led_pairs: List[List] = [outer_led, middle_led, inner_led]
 
-    GPIO.output(first_list, GPIO.HIGH)
-    time.sleep(wait)
-    GPIO.output(first_list, GPIO.LOW)
-    time.sleep(wait)
     while runs > 0:
-        GPIO.output(middle_list, GPIO.HIGH)
-        time.sleep(wait)
-        GPIO.output(middle_list, GPIO.LOW)
-        time.sleep(wait)
-        if runs % 2 == 0:
-            GPIO.output(last_list, GPIO.HIGH)
-            time.sleep(wait)
-            GPIO.output(last_list, GPIO.LOW)
-            time.sleep(wait)
+        if not invert:
+            # starts flashing with outer led's
+            for pair in led_pairs:
+                GPIO.output(pair, GPIO.HIGH)
+                time.sleep(wait)
+                GPIO.output(pair, GPIO.LOW)
+                time.sleep(wait)
+            led_pairs.reverse()
         else:
-            GPIO.output(first_list, GPIO.HIGH)
-            time.sleep(wait)
-            GPIO.output(first_list, GPIO.LOW)
-            time.sleep(wait)
+            # starts flashing with inner led's
+            led_pairs.reverse()
+            for pair in led_pairs:
+                GPIO.output(pair, GPIO.HIGH)
+                time.sleep(wait)
+                GPIO.output(pair, GPIO.LOW)
+                time.sleep(wait)
         runs = runs - 1
 
 if __name__ == '__main__':
@@ -85,7 +86,7 @@ if __name__ == '__main__':
     elif mode == 2:
         flickering_light()
     elif mode == 3:
-        knight_rider_light()
+        clapping_light()
     else:
-        sys.stdout.write("Please choose a mode between 1 and 2.")
+        sys.stdout.write("Please choose a mode between 1 and 3.")
     GPIO.cleanup()
