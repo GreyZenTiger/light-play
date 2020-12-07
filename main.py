@@ -34,13 +34,14 @@ GPIO.setup(led4, GPIO.OUT)
 GPIO.setup(led5, GPIO.OUT)
 
 
-def running_light(runs: int = 3, wait: float = 0.1):
+def knight_rider_light(runs: int = 10, wait: float = 0.1):
     while runs > 0:
         for led in led_list:
             GPIO.output(int(led), GPIO.HIGH)
             time.sleep(wait)
             GPIO.output(int(led), GPIO.LOW)
             time.sleep(wait)
+        led_list.reverse()
         runs = runs - 1
 
 
@@ -82,7 +83,7 @@ def clapping_light(runs: int = 20, wait: float = 0.1, invert: bool = False):
 
 if __name__ == '__main__':
     if mode == 1:
-        running_light()
+        knight_rider_light()
     elif mode == 2:
         flickering_light()
     elif mode == 3:
