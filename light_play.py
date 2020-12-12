@@ -8,38 +8,56 @@ light animations on a Raspberry Pi.
 
 Functions:
 
+create_config() -- creates config.ini if it's not existing
+load_config() -- loads all variables from config.ini
 knight_rider_light() -- a light running from one side to the other and back
 flickering_light() -- the LEDs flicker randomly
 clapping_light() -- two lights running from the outer LEDs to the inner ones
 """
 
+import os.path
 import sys
 import time
+from configparser import ConfigParser
 from random import random, randint
 from typing import List
 
 import RPi.GPIO as GPIO
 
+# get configparser object
+config = ConfigParser()
+config.read('config.ini')
+# list of all defined LEDs
+led_list: List[int] = []
 # defines how the GPIO pins are count
 GPIO.setmode(GPIO.BOARD)
 # the mode chosen by the user
 mode: int = int(sys.argv[1])
-# defines to which GPIO pins the LEDs are connected
-led0: int = 16
-led1: int = 18
-led2: int = 22
-led3: int = 11
-led4: int = 13
-led5: int = 15
-# list of all defined LEDs
-led_list: List[int] = [led0, led1, led2, led3, led4, led5]
-# defines GPIO pins as outputs
-GPIO.setup(led0, GPIO.OUT)
-GPIO.setup(led1, GPIO.OUT)
-GPIO.setup(led2, GPIO.OUT)
-GPIO.setup(led3, GPIO.OUT)
-GPIO.setup(led4, GPIO.OUT)
-GPIO.setup(led5, GPIO.OUT)
+
+
+def create_config():
+    """Creates the config.ini file if it's not existing."""
+    # check if config.ini exists
+    if not os.path.isfile('config.ini'):
+        # predefine content of config.ini
+        config['LedPosition'] = {
+            'led0': '16', 'led1': '18', 'led2': '22',
+            'led3': '11', 'led4': '13', 'led5': '15'
+        }
+        # create config.ini
+        with open('config.ini', 'w') as conf:
+            config.write(conf)
+
+
+def load_config():
+    """Loads all variables from config.ini file."""
+    global led_list
+    # load led positions from config.ini
+    for key in config['LedPosition']:
+        led_list.append(config.getint('LedPosition', key))
+    # defines used GPIO pins as outputs
+    for led in led_list:
+        GPIO.setup(led, GPIO.OUT)
 
 
 def knight_rider_light(runs: int = 10, wait: float = 0.1):
@@ -71,6 +89,7 @@ def flickering_light(duration: int = 50):
     the LEDs would flash. (default is 50)
     """
     while duration > 0:
+        # chooses a random LED
         random_led = randint(0, 5)
         GPIO.output(int(led_list[random_led]), GPIO.HIGH)
         time.sleep(random())
@@ -119,6 +138,10 @@ def clapping_light(runs: int = 10, wait: float = 0.1, invert: bool = False):
 
 
 if __name__ == '__main__':
+    # create config.ini or load the existing one
+    create_config()
+    load_config()
+
     if mode == 1:
         knight_rider_light()
     elif mode == 2:
@@ -127,4 +150,5 @@ if __name__ == '__main__':
         clapping_light()
     else:
         sys.stdout.write("Please choose a mode between 1 and 3.")
-    GPIO.cleanup()
+    # cleanup the used GPIO pins
+    GPIO.cleanup(led_list)
