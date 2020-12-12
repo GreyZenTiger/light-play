@@ -89,11 +89,12 @@ def flickering_light(duration: int = 50):
     the LEDs would flash. (default is 50)
     """
     while duration > 0:
-        # chooses a random LED
-        random_led = randint(0, 5)
-        GPIO.output(int(led_list[random_led]), GPIO.HIGH)
+        # chooses a random index
+        random_index = randint(0, 5)
+        # flash random LED
+        GPIO.output(int(led_list[random_index]), GPIO.HIGH)
         time.sleep(random())
-        GPIO.output(int(led_list[random_led]), GPIO.LOW)
+        GPIO.output(int(led_list[random_index]), GPIO.LOW)
         duration = duration - 1
 
 
@@ -110,13 +111,15 @@ def clapping_light(runs: int = 10, wait: float = 0.1, invert: bool = False):
     :parameter invert bool, optional Describes if the flashing lights
     should start at the outer or the inner LEDs. (default is False)
     """
-    # splitting the list of all LEDs in outer, middle and inner LEDs
-    outer_led: List[int] = [led_list[0], led_list[5]]
-    middle_led: List[int] = [led_list[1], led_list[4]]
-    inner_led: List[int] = [led_list[2], led_list[3]]
+    left_index: int = 0
+    right_index: int = len(led_list) - 1
     # holds the single LED pairs starting with outer LEDs at index 0
-    led_pairs: List[List] = [outer_led, middle_led, inner_led]
-
+    led_pairs: List[List] = []
+    # splitting the list of all LEDs in pairs from outer to inner LEDs
+    while left_index <= right_index:
+        led_pairs.append([led_list[left_index], led_list[right_index]])
+        left_index = left_index + 1
+        right_index = right_index - 1
     while runs > 0:
         if not invert:
             # starts flashing with outer LEDs
@@ -138,10 +141,8 @@ def clapping_light(runs: int = 10, wait: float = 0.1, invert: bool = False):
 
 
 if __name__ == '__main__':
-    # create config.ini or load the existing one
     create_config()
     load_config()
-
     if mode == 1:
         knight_rider_light()
     elif mode == 2:
