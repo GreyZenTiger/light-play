@@ -32,7 +32,7 @@ led_list: List[int] = []
 # defines how the GPIO pins are count
 GPIO.setmode(GPIO.BOARD)
 # the mode chosen by the user
-mode: int = int(sys.argv[1])
+mode: int = int(sys.argv[1])    # TODO initialization raises an error if no sys.argv was given
 
 
 def create_config():
@@ -42,7 +42,7 @@ def create_config():
         # predefine content of config.ini
         config['LedPosition'] = {
             'led0': '16', 'led1': '18', 'led2': '22',
-            'led3': '11', 'led4': '13', 'led5': '15'
+            'led3': '36', 'led4': '38', 'led5': '40'
         }
         # create config.ini
         with open('config.ini', 'w') as conf:
@@ -90,7 +90,7 @@ def flickering_light(duration: int = 50):
     """
     while duration > 0:
         # chooses a random index
-        random_index = randint(0, 5)
+        random_index = randint(0, len(led_list) - 1)
         # flash random LED
         GPIO.output(int(led_list[random_index]), GPIO.HIGH)
         time.sleep(random())
@@ -118,8 +118,8 @@ def clapping_light(runs: int = 10, wait: float = 0.1, invert: bool = False):
     # splitting the list of all LEDs in pairs from outer to inner LEDs
     while left_index <= right_index:
         led_pairs.append([led_list[left_index], led_list[right_index]])
-        left_index = left_index + 1
-        right_index = right_index - 1
+        left_index += 1
+        right_index -= 1
     while runs > 0:
         if not invert:
             # starts flashing with outer LEDs

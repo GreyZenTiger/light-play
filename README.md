@@ -10,7 +10,7 @@
 4. [License](#license)
 
 ## <center>About the Project</center>
-_Light Play_ is a little project which was created to play some simple light animations with a Raspberry Pi and some LEDs.
+_Light Play_ is a little project which was created to play some simple light animations with a Raspberry Pi 4 and some LEDs.
 
 ### Build With
 [PyCharm](https://www.jetbrains.com/pycharm/)
@@ -19,14 +19,18 @@ _Light Play_ is a little project which was created to play some simple light ani
 
 ### Prerequisites
 First make sure that you've connected six LEDs to the GPIO Pins of your Raspberry Pi.
-They must be connected in the following order **GPIO22, GPIO27, GPIO 17, GPIO 25, GPIO 24 and GPIO 23.**
-The picture underneath shows where to find the correct pins.
-
 If you don't know how to connect a LED to a Raspberry Pi click [here](https://projects.raspberrypi.org/en/projects/rpi-connect-led).
+If you know how to do it you can use the picture underneath to connect the LEDs correct. You have to connect the LEDs in the following order: 
+- GPIO23 **Green**
+- GPIO24 **Yellow**
+- GPIO25 **Orange**
+- GPIO16 **Red**
+- GPIO20 **Purple**
+- GPIO21 **Blue**
 
-![](Ressources/GPIO-Pinout-Diagram.png)
+![](Ressources/GPIO_wiring_diagram.png)
 
-The Picture was taken from the official [Raspberry Pi Website](https://www.raspberrypi.org/documentation/usage/gpio/).
+The Picture was created with [Fritzing](https://fritzing.org).
 
 After you've connected the LEDs, you should make sure that your Raspberry Pi is up to date. 
 To do so tap the following command into your terminal and press enter after you're done.
